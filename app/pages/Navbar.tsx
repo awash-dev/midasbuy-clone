@@ -1,4 +1,5 @@
 "use client";
+
 import { auth } from "@/Firebase";
 import { useState, useEffect } from "react";
 import {
@@ -6,21 +7,22 @@ import {
   GoogleAuthProvider,
   onAuthStateChanged,
   signOut,
+  User,
 } from "firebase/auth";
 
-const Navbar = () => {
+const Navbar: React.FC = () => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const provider = new GoogleAuthProvider();
 
-  const handleLogin = async () => {
+  const handleLogin = async (): Promise<void> => {
     setLoading(true);
     try {
       const result = await signInWithPopup(auth, provider);
-      const user = result.user;
+      const user: User = result.user;
       const profileImageUrl = user.photoURL;
       setProfileImage(profileImageUrl);
-      localStorage.setItem("profilePic", profileImageUrl);
+      localStorage.setItem("profilePic", profileImageUrl || "");
       console.log("Profile Image URL:", profileImageUrl);
     } catch (error) {
       console.error("Error during login:", error);
@@ -48,7 +50,7 @@ const Navbar = () => {
     return () => unsubscribe();
   }, []);
 
-  const handleSignOut = async () => {
+  const handleSignOut = async (): Promise<void> => {
     try {
       await signOut(auth);
       console.log("User signed out successfully");
@@ -93,6 +95,7 @@ const Navbar = () => {
                   height={60}
                   alt="Profile"
                   className="rounded-full cursor-pointer"
+                // Reset if image fails to load
                 />
               </div>
             ) : (
