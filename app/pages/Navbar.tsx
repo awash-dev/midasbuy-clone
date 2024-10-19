@@ -54,14 +54,16 @@ const Navbar: React.FC = () => {
     try {
       await signOut(auth);
       console.log("User signed out successfully");
+      setProfileImage(null); // Clear profile image on sign out
+      localStorage.removeItem("profilePic"); // Clear local storage on sign out
     } catch (error) {
       console.error("Error signing out: ", error);
     }
   };
 
   return (
-    <div className="w-full h-[80px] bg-blue-950/90 flex items-center">
-      <div className="container flex items-center justify-around xl:justify-between text-center">
+    <div className="  w-full h-[80px]   flex items-center">
+      <div className=" h-[80px]  bg-blue-950/90  w-full fixed z-50 flex items-center justify-around xl:justify-between text-center">
         <div>
           <h1 className="h1 sm:pl-20 pl-5 text-[25px]">TOP-UP</h1>
         </div>
@@ -85,7 +87,7 @@ const Navbar: React.FC = () => {
           </ul>
         </div>
         <div>
-          <div className="relative">
+          <div className="relative xl:pr-32 pr-10">
             {profileImage ? (
               <div className="flex items-center">
                 <img
@@ -95,7 +97,7 @@ const Navbar: React.FC = () => {
                   height={60}
                   alt="Profile"
                   className="rounded-full cursor-pointer"
-                // Reset if image fails to load
+                  onError={() => setProfileImage(null)} // Reset if image fails to load
                 />
               </div>
             ) : (
